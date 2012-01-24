@@ -7,7 +7,8 @@
     </parameters>
     <services>
         <service id="blage_js_user.controller" class="%blage_js_user.controller.class%">
-            <argument type="service" id="service_container" />
+            <argument type="service" id="security.context" />
+            <argument>%blage.js.mapped_fields%</argument>
         </service>
     </services>
 </container>

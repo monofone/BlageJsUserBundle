@@ -2,7 +2,7 @@
 
 namespace Blage\JsUserBundle\Controller;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -11,42 +11,42 @@ use Symfony\Component\HttpFoundation\Response;
 class UserController
 {
     
-    protected $container;
+    protected $securityContext;
     
-    public function __construct(ContainerInterface $container)
-    {
-        $this->container = $container;
-    }
+    protected $mappedFields;
     
-    protected function get($id)
+    public function __construct(SecurityContextInterface $securityContext, array $mappedFields)
     {
-        return $this->container->get($id);
+        $this->securityContext = $securityContext;
+        $this->mappedFields = $mappedFields;
     }
+
     
     public function userDataAction($objectName)
     {
-        $securityContext = $this->get('security.context');
-        if($securityContext->isGranted('IS_AUTHENTICATED_FULLY')){
-            $user = $securityContext->getToken()->getUser();
-            $mappedFields = $this->container->getParameter('blage.js.mapped_fields');
-            $userdata = array();
-            foreach($mappedFields as $field){
+        if($this->securityContext->isGranted('IS_AUTHENTICATED_FULLY')){
+            $user = $this->securityContext->getToken()->getUser();
+            $userdataString = "{\n";
+            $propCount = 0;
+            foreach($this->mappedFields as $field){
+                $propCount++;
                 $methodName = 'get'. ucfirst(Container::camelize($field));
                 if(method_exists($user, $methodName)){
-                    $userdata[$field] = $user->{$methodName}();
+                    $userdataString .= '  this.'.$field."='".$user->{$methodName}()."'";
+                    if($propCount < count($this->mappedFields)){
+                        $userdataString .=",";
+                    }
+                    $userdataString .="\n";
                 }
                 
             }
-            return $this->render('BlageJsUserBundle:User:userJs.html.twig', array(
-                'user_data' => $userdata,
-                'object_name' => $objectName,
-            ));
+            $userdataString = 'function '.$objectName.'()'.$userdataString;
+            
+            $userdataString .= "}\n window.".$objectName."= new ".$objectName."()";
+            
+            return new Response($userdataString);
         }
         return new Response();
     }
     
-    protected function render($template, $options)
-    {
-        return new Response($this->get('twig')->render($template, $options));
-    }
 }
