@@ -1,0 +1,8 @@
+function {{ object_name }}(){
+{% for field,value in user_data %}
+  this.{{field}} = '{{value}}'{% if not loop.last %},{% endif %}
+{% endfor %}
+  
+}
+
+window.{{object_name}} = new {{ object_name }}();
