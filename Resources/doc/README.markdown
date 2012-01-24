@@ -9,9 +9,9 @@ Installation
 
 Add this bundle to your deps file
 
-  [BlageJsUser]
-    git=git://github.com/monofone/BlageJsUserBundle.git
-    target=bundles/Blage/JsRoutingBundle
+    [BlageJsUser]
+      git=git://github.com/monofone/BlageJsUserBundle.git
+      target=bundles/Blage/JsUserBundle
 
 Register the namespace in 'app/autoload.php'
  
