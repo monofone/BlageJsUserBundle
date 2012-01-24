@@ -47,6 +47,10 @@ Just add this line in your layout:
 
 The parameter part with the objectName can be omitted as 'User' is the default value.
 
+Now you can easily access you defined Userproperties via User.propertiname
+
+as in User.username
+
 In app/config.yml you can define more fields to be populated
 
     // app/config.yml
