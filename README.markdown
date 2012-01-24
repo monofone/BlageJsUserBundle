@@ -1,7 +1,7 @@
 BlageJsUserBundle
 =================
 
-This Bundle exposes User Information with to your JS code. You cann acces user
+This Bundle exposes User Information into your JS code. You cann acces user
 details such as username and other details like in the SecurityContext.
 Which data  is exposed is configurable.
 
