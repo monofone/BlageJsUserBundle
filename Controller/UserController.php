@@ -32,7 +32,7 @@ class UserController
                 $propCount++;
                 $methodName = 'get'. ucfirst(Container::camelize($field));
                 if(method_exists($user, $methodName)){
-                    $userdataString .= '  this.'.$field."='".$user->{$methodName}()."'";
+                    $userdataString .= '  this.'.$field." = '".$user->{$methodName}()."'";
                     if($propCount < count($this->mappedFields)){
                         $userdataString .=",";
                     }
@@ -42,7 +42,7 @@ class UserController
             }
             $userdataString = 'function '.$objectName.'()'.$userdataString;
             
-            $userdataString .= "}\n window.".$objectName."= new ".$objectName."()";
+            $userdataString .= "}\n window.".$objectName." = new ".$objectName."();";
             
             return new Response($userdataString);
         }
